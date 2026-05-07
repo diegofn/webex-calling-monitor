@@ -1,0 +1,28 @@
+{
+    "cSpell.language": "en",
+    "cSpell.enabled": true,
+    "cSpell.diagnosticLevel": "hint",
+    "cSpell.words": [
+        "Webex",
+        "FastAPI",
+        "SQLAlchemy",
+        "PostgreSQL",
+        "OAuth",
+        "XSI",
+        "daemon",
+        "geolocation",
+        "uvicorn",
+        "wxc",
+        "integrations",
+        "postgres",
+        "middleware"
+    ],
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ]
+}

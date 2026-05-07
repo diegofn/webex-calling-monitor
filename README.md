@@ -3,6 +3,7 @@
 Python middleware for Webex Calling XSI interface to monitor the telephony events in Webex Calling
 
 ## Features
+
 - Monitoring and managing call events in real-time using Webex XSI events
 - OAuth for secure authentication and user identification
 - Secure session management and token refresh for continuous application use
@@ -12,14 +13,14 @@ Python middleware for Webex Calling XSI interface to monitor the telephony event
 ## User cases
 
 ### Block call by geo location.
+
 First version for daemon that register the XSI Interface for the organization and check the Geolocation based on a webpage.
-
-
 
 ## Installation/Configuration in VPS
 
 1. Clone this repository with `git clone https://github.com/diegofn/webex-calling.monitor`
 2. Install the dependencies
+
 ```Shell
    sudo apt update
    sudo apt upgrade
@@ -31,10 +32,11 @@ First version for daemon that register the XSI Interface for the organization an
 ```
 
 1. Create postgres user
+
 ```Shell
    sudo -i -u postgres
    createuser --interactive
-   createdb webex
+   createdb wxc-monitor
    psql
    alter user webex with encrypted password 'webex';
    grant all privileges on database webex to webex;
@@ -42,7 +44,8 @@ First version for daemon that register the XSI Interface for the organization an
    sudo adduser webex
 ```
 
-1. Install python requerimients
+1. Install python requirements
+
 ```Shell
    python -m venv .
    source bin/activate
@@ -50,6 +53,7 @@ First version for daemon that register the XSI Interface for the organization an
 ```
 
 1. Install uvicorn process
+
 ```Shell
    python setup.py run
 ```
@@ -74,6 +78,7 @@ This file contains key settings that the application uses to interact with the W
 
 
 ### `.env` example
+
    ```script
    WEBEX_ADMIN_UID=YOUR_WEBEX_ADMIN_UID
    CLIENT_ID=YOUR_WEBEX_INTEGRATION_CLIENT_ID
@@ -81,31 +86,42 @@ This file contains key settings that the application uses to interact with the W
    SQLALCHEMY_DATABASE_URL="postgresql://YOUR_USN:YOUR_PASSWORD@localhost/YOUR_DB_NAME"
    PUBLIC_URL=https://subdomain.ngrok-free.app
    ```
+
 ## Usage
+
 ### Start the Application
+
 To initiate the App, start the FastAPI application:
-```
+
+```Shell
    uvicorn main:app
    uvicorn main:app --log-level warning
 ```
 
 ## Screenshots/GIFs
-### Environment Setup: <br>
-![/images/setup.gif](/images/setup.gif)<br>
 
-### Database Setup: <br>
-![/images/database_setup.gif](/images/database_setup.gif)<br>
+### Environment Setup:
 
-### WxC monitoring setup <br>
-![/images/app_setup.gif](/images/app_setup.gif)<br>
+![/images/setup.gif](/images/setup.gif)
 
-### Starting Call Monitoring <br>
-![/images/call_monitor.gif](/images/call_monitor.gif)<br>
+### Database Setup:
+
+![/images/database_setup.gif](/images/database_setup.gif)
+
+### WxC monitoring setup 
+
+![/images/app_setup.gif](/images/app_setup.gif)
+
+### Starting Call Monitoring:
+![/images/call_monitor.gif](/images/call_monitor.gif)
 
 ## Webex Calling XSI Documentation
-https://developer.cisco.com/docs/webex-calling/developer-docs/
+
+<https://developer.cisco.com/docs/webex-calling/developer-docs/>
 
 ## Based on: gve_devnet_webex_xsi_call_block 
-https://github.com/gve-sw/gve_devnet_webex_xsi_call_block
-* Mark Orszycki
-* Gerardo Chaves
+
+<https://github.com/gve-sw/gve_devnet_webex_xsi_call_block>
+
+- Mark Orszycki
+- Gerardo Chaves

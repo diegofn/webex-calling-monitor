@@ -1,0 +1,16 @@
+[Unit]
+Description=Webex Calling Unicorn with venv
+After=network.target
+
+[Service]
+WorkingDirectory=/home/diegofn/Documents/python/webex-calling-monitor
+ExecStart=/home/diegofn/Documents/python/webex-calling-monitor/bin/uvicorn main:app
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=wxc-monitor
+User=diegofn
+
+[Install]
+WantedBy=multi-user.target

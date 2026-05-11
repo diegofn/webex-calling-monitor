@@ -1,0 +1,182 @@
+{% extends "layouts/masterPage.html" %}
+{% block content %}
+<!-- Admin-specific page content goes here -->
+<div class="container">
+    <h2>Admin Authentication Successful</h2>
+    <p>Welcome, Admin. You are now authenticated and can start call monitoring.</p>
+    <button id="startCallMonitoring" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Start Call Monitoring</button>
+    <p/>
+
+    <h2>XSI User Map</h2>
+    <!-- Area to show response from start monitoring -->
+    <div id="responseMessage" style="margin-top:12px;color:#333;"></div>
+
+    <!-- Table container for xsi_user_map -->
+    <div id="xsiUsersContainer" style="margin-top:20px; display:none;">
+        <button id="refreshXsiUsers" class="btn-secondary" style="margin-bottom:8px;">Refresh List</button>
+        <div class="table-wrapper">
+            <table id="xsiUsersTable" class="xsi-table" aria-live="polite">
+                <thead>
+                    <tr>
+                        <th>Remote Party Name</th>
+                        <th>XSI User ID</th>
+                        <th>Webex User ID</th>
+                        <th>Phone Number</th>
+                        <th>Extension</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+async function fetchXsiUsers() {
+    const container = document.getElementById('xsiUsersContainer');
+    const tbody = document.querySelector('#xsiUsersTable tbody');
+    const msg = document.getElementById('responseMessage');
+
+    tbody.innerHTML = '';
+    msg.textContent = 'Loading users...';
+
+    try {
+        const res = await fetch('/api/xsi-users', { method: 'GET', credentials: 'include' });
+        if (!res.ok) {
+            msg.textContent = `Error to fetch users: ${res.status} ${res.statusText}`;
+            container.style.display = 'none';
+            return;
+        }
+        const data = await res.json();
+
+        // data can be an Object 
+        let rows = [];
+        if (Array.isArray(data)) {
+            rows = data;
+        } else if (data && typeof data === 'object') {
+            // If it's an object, get its values as an array
+            rows = Object.values(data);
+        }
+
+        if (rows.length === 0) {
+            msg.textContent = 'Users XSI not found.';
+            container.style.display = 'none';
+            return;
+        }
+
+        // Fill table
+        for (const user of rows) {
+            const tr = document.createElement('tr');
+
+            const name = user.remote_party_name ?? user.name ?? '';
+            const xid = user.xsi_user_id ?? user.xsiUserId ?? user.id ?? '';
+            const webexId = user.webex_user_id ?? user.webexUserId ?? '';
+            const phone = user.phone_number ?? user.phone ?? '';
+            const ext = user.extension ?? '';
+
+            // helper to mask leaving last 4 chars visible
+            function maskValue(s){
+                if(!s) return '';
+                const str = String(s);
+                if(str.length <= 4) return '•'.repeat(str.length);
+                return '•'.repeat(str.length - 4) + str.slice(-4);
+            }
+            
+            const maskedWebex = maskValue(webexId);
+
+
+            tr.innerHTML = `
+                <td>${escapeHtml(name)}</td>
+                <td>${escapeHtml(xid)}</td>
+                <td class="masked-cell">
+                    <span class="masked-text">${escapeHtml(maskedWebex)}</span>
+                    <button class="toggle-visibility" type="button" aria-pressed="false" aria-label="Show value" data-full="${escapeHtml(webexId)}">
+                        <!-- eye icon (SVG) -->
+                        <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </td>
+                <td>${escapeHtml(phone)}</td>
+                <td>${escapeHtml(ext)}</td>
+            `;
+            tbody.appendChild(tr);
+
+            // attach toggle handler
+            const btn = tr.querySelector('.toggle-visibility');
+            const span = tr.querySelector('.masked-text');
+            if (btn && span) {
+                btn.addEventListener('click', function () {
+                    const isShown = btn.getAttribute('aria-pressed') === 'true';
+                    const full = btn.dataset.full || '';
+                    if (isShown) {
+                        // hide
+                        span.textContent = maskValue(full);
+                        btn.setAttribute('aria-pressed', 'false');
+                        btn.setAttribute('aria-label', 'Show value');
+                        // eye icon
+                        btn.innerHTML = `<svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
+                    } else {
+                        // show
+                        span.textContent = full;
+                        btn.setAttribute('aria-pressed', 'true');
+                        btn.setAttribute('aria-label', 'Hide value');
+                        // eye-off icon
+                        btn.innerHTML = `<svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.06 10.06 0 0 1 12 20c-7 0-11-8-11-8a21.64 21.64 0 0 1 5.28-7.05"/><path d="M1 1l22 22"/></svg>`;
+                    }
+                });
+            }
+        }
+
+        msg.textContent = `Found ${rows.length} XSI Users`;
+        container.style.display = 'block';
+    } catch (err) {
+        console.error(err);
+        msg.textContent = 'Error fetching users.';
+        container.style.display = 'none';
+    }
+}
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+document.getElementById('refreshXsiUsers').addEventListener('click', fetchXsiUsers);
+
+// Initial fetch
+fetchXsiUsers();
+
+document.getElementById('startCallMonitoring').addEventListener('click', function() {
+    fetch('/start-call-monitoring', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Necessary for cookies to be sent if using session authentication
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.redirect) {
+            // If a redirect URL is specified, redirect using GET
+            window.location.href = data.redirect;
+        } else if (data.message) {
+            // Handle other responses
+            document.getElementById('responseMessage').textContent = data.message;
+            alert("Response: " + JSON.stringify(data.message));
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+});
+
+</script>
+
+{% endblock %}

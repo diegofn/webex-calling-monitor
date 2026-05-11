@@ -1,0 +1,244 @@
+
+/*Masterpage*/
+#footer-link-meraki{
+    height: 15px;
+}
+#footer-link-gve-devnet{
+    height: 30px;
+    bottom: 4px;
+    position: relative;
+}
+#time_location_note{
+    color: var(--cui-color-gray-500);
+    padding-top: 5px;
+    text-align: center;
+    font-size: var(--cui-font-size-sm);
+}
+/*Position footer at bottom. Even with less content.*/
+.cui .content{
+    min-height: 93vh;
+}
+body.cui footer, body.cui .footer{
+    margin-top: 0;
+}
+/*Header*/
+#header-logo{
+    font-size: 23px;
+}
+
+/*Login*/
+.required-label{
+    color: var(--cui-form-label-color);
+}
+#customer-logo{
+    height:55px;
+    margin-bottom: 10px;
+}
+
+/*Left Menu*/
+.cui .sidebar{
+padding-top: 30px;
+}
+
+/*Charts from chart.js*/
+.chartjs-render-monitor{
+background-color: white;
+padding: 10px;
+}
+
+/*list groups*/
+.list-group{
+padding-left: 0 !important;
+}
+
+.list-group-item{
+list-style-type: none;
+}
+
+#meraki_api h3{
+margin-top: 20px;
+}
+
+.list-group-item .btn--link{
+padding-left: 0;
+padding-right: 0;
+text-align: left;
+}
+
+
+/*table*/
+.cui .responsive-table{
+width: 100%;
+}
+
+.launch-button {
+    display: inline-flex; /* Makes the button inline and allows flexbox properties */
+    align-items: center; /* Aligns text and icon vertically */
+    padding: 5px 10px; /* Reduces padding for a smaller button */
+    font-size: 0.8rem; /* Adjusts font size for the text */
+    margin: 0; /* Removes any default margin */
+}
+
+.launch-button__text {
+    margin-right: 5px; /* Adds space between text and icon */
+}
+
+.launch-button__icon img {
+    width: 20px; /* Adjusts the size of the icon */
+    height: auto; /* Keeps the aspect ratio of the icon */
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    cursor: pointer;
+}
+
+/* Cisco Webex-inspired style tokens */
+:root {
+  --wx-primary: #0b57a4;
+  --wx-primary-700: #084b86;
+  --wx-ink-700: #172b4d;
+  --wx-bg: #f4f6f8;
+  --wx-surface: #ffffff;
+  --wx-muted: #6b778c;
+  --wx-focus: rgba(124,196,255,0.28);
+  --wx-radius: 6px;
+  --wx-font-stack: "CiscoSans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Page */
+body.cui {
+  background: var(--wx-bg);
+  color: var(--wx-ink-700);
+  font-family: var(--wx-font-stack);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Table wrapper */
+.table-wrapper {
+  overflow-x:auto;
+  border-radius: var(--wx-radius);
+  margin-top: 8px;
+}
+
+/* Table surface */
+.xsi-table {
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  background: var(--wx-surface);
+  box-shadow: 0 1px 3px rgba(16,24,40,0.06);
+  font-size:14px;
+  color: var(--wx-ink-700);
+  border-radius: var(--wx-radius);
+  overflow: hidden;
+}
+
+/* Header */
+.xsi-table thead th {
+  background: #f4f6f8;
+  color: #172b4d; 
+  font-weight:600;
+  padding:12px 16px;
+  text-align:left;
+  position: sticky;
+  top:0;
+  z-index:1;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size:13px;
+  letter-spacing: 0.01em;
+}
+
+/* Cells */
+.xsi-table th, .xsi-table td {
+  padding:12px 16px;
+  border-bottom:1px solid #eef1f4;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+/* Row styles */
+.xsi-table tbody tr {
+  transition: background .12s ease;
+}
+.xsi-table tbody tr:nth-child(even) { background: #fbfdff; }
+.xsi-table tbody tr:hover { background: #f1f7fc; }
+
+/* Masked text style */
+.masked-text {
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.08em;
+  color: var(--wx-ink-700);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--wx-primary);
+  color: #fff;
+  padding:8px 14px;
+  border-radius:4px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  box-shadow: 0 1px 2px rgba(11,87,164,0.12);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--wx-primary);
+  padding:6px 10px;
+  border-radius:4px;
+  border:1px solid rgba(11,87,164,0.12);
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* Mask/eye styles */
+.masked-cell { display:flex; align-items:center; gap:8px; }
+.toggle-visibility {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--wx-primary);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+}
+.toggle-visibility:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--wx-focus);
+}
+
+/* Responsive adjustments */
+@media (max-width:720px) {
+  .xsi-table th, .xsi-table td { padding:10px 12px; font-size:13px; }
+  .table-wrapper { margin-left: -8px; margin-right: -8px; }
+}

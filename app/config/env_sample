@@ -1,0 +1,5 @@
+WEBEX_ADMIN_UID=
+CLIENT_ID=
+CLIENT_SECRET=
+SQLALCHEMY_DATABASE_URL=postgresql://webex:webex@localhost/webex
+PUBLIC_URL=https://public-url.ngrok-free.app

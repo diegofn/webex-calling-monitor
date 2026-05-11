@@ -8,11 +8,11 @@ Python middleware for Webex Calling XSI interface to monitor the telephony event
 - OAuth for secure authentication and user identification
 - Secure session management and token refresh for continuous application use
 - Database operations using SQLAlchemy for data storage and retrieval
-- PostgreSQL database for storing user data, session tokens, calls an agent information information
+- PostgreSQL database for storing user data, session tokens, calls and agent information
 
-## User cases
+## Use cases
 
-### Block call by geo location.
+### Block call by geo location
 
 First version for daemon that register the XSI Interface for the organization and check the Geolocation based on a webpage.
 
@@ -38,10 +38,12 @@ First version for daemon that register the XSI Interface for the organization an
    createuser --interactive
    createdb wxc-monitor
    psql
-   alter user webex with encrypted password 'webex';
-   grant all privileges on database webex to webex;
+   alter user "wxc-monitor" with encrypted password 'wxc-monitor';
+   grant all privileges on database "wxc-monitor" to "wxc-monitor";
    exit
-   sudo adduser webex
+   # Optional
+   sudo adduser wxc-monitor
+   exit 
 ```
 
 1. Install python requirements
@@ -55,12 +57,12 @@ First version for daemon that register the XSI Interface for the organization an
 1. Install uvicorn process
 
 ```Shell
-   python setup.py run
+   python app/config/setup.py run
 ```
 
-## Manually create and update the `.env` and update settings.py file:
+## Manually create and update the `.env` and update settings.py file
 
-To configure the application, you need to update the `.env` on the `app/config` folder with the appropriate values. 
+To configure the application, you need to update the `.env` on the `app/config` folder with the appropriate values.
 This file contains key settings that the application uses to interact with the Webex APIs and to set up its environment.
 
 1. **Webex Admin User ID**:
@@ -73,9 +75,8 @@ This file contains key settings that the application uses to interact with the W
 3. **Database Configuration**:
    - `SQLALCHEMY_DATABASE_URL`: The database URL for the application. The default is a PostgreSQL database, but you can replace it with a different database URL if needed.
 
-4. **PUBLIC_URL**: 
+4. **PUBLIC_URL**:
    - `PUBLIC_URL`: The URL for the application for private or public environment, we suggest to have it on HTTPS
-
 
 ### `.env` example
 
@@ -100,26 +101,27 @@ To initiate the App, start the FastAPI application:
 
 ## Screenshots/GIFs
 
-### Environment Setup:
+### Environment Setup
 
 ![/images/setup.gif](/images/setup.gif)
 
-### Database Setup:
+### Database Setup
 
 ![/images/database_setup.gif](/images/database_setup.gif)
 
-### WxC monitoring setup 
+### WxC monitoring setup
 
 ![/images/app_setup.gif](/images/app_setup.gif)
 
-### Starting Call Monitoring:
+### Starting Call Monitoring
+
 ![/images/call_monitor.gif](/images/call_monitor.gif)
 
 ## Webex Calling XSI Documentation
 
 <https://developer.cisco.com/docs/webex-calling/developer-docs/>
 
-## Based on: gve_devnet_webex_xsi_call_block 
+## Based on: gve_devnet_webex_xsi_call_block
 
 <https://github.com/gve-sw/gve_devnet_webex_xsi_call_block>
 

@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 from fastapi import Request, APIRouter, HTTPException, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.responses import JSONResponse
@@ -251,6 +252,49 @@ async def start_call_monitoring(request: Request, db: Session = Depends(dependen
     except Exception as e:
         lm.lnp(f"Failed to initiate call monitoring: {e}", level="error")
         return JSONResponse(status_code=500, content={"message": f"Failed to initiate call monitoring: {str(e)}"})
+
+@webex_router.get("/admin/agent_monitor", response_class=HTMLResponse)
+async def admin_agent_monitor(request: Request):
+    return templates.TemplateResponse("admin_agent_monitor.html", {"request": request})
+
+
+@webex_router.get("/api/agent-events")
+async def api_agent_events(
+    request: Request,
+    db: Session = Depends(dependency_db),
+    date_from: Optional[int] = None,
+    date_to: Optional[int] = None,
+    user_id: Optional[str] = None,
+):
+    is_admin_authenticated = request.cookies.get("is_admin_authenticated") == "true"
+    if not is_admin_authenticated:
+        return JSONResponse(content={"message": "Unauthorized"}, status_code=403)
+    try:
+        crud = CRUDOperations(db)
+        events = crud.get_agent_events(date_from=date_from, date_to=date_to, user_id=user_id)
+        result = [
+            {
+                "id": ev.id,
+                "event_id": ev.event_id,
+                "sequence_number": ev.sequence_number,
+                "user_id": ev.user_id,
+                "target_id": ev.target_id,
+                "event_type": ev.event_type,
+                "state": ev.state,
+                "state_timestamp": ev.state_timestamp,
+                "sign_in_timestamp": ev.sign_in_timestamp,
+                "total_available_time": ev.total_available_time,
+                "average_wrap_up_time": ev.average_wrap_up_time,
+                "name": wu.name if wu else None,
+                "extension": wu.extension if wu else None,
+            }
+            for ev, wu in events
+        ]
+        return JSONResponse(content=result)
+    except Exception as e:
+        lm.lnp(f"Error fetching agent events: {e}", level="error")
+        return JSONResponse(status_code=500, content={"message": str(e)})
+
 
 @webex_router.get("/error")
 async def get_error(request: Request):

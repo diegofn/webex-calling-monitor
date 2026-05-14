@@ -177,11 +177,6 @@ class CallMonitor:
         entry = self.xsi_user_map.get(internal_xsi_user_id)
         internal_webex_user_id = entry.get('webex_user_id') if entry else None
 
-        if event_type == "xsi:CallReceivedEvent" and internal_webex_user_id:
-            lm.lnp(f"External to internal call (inbound) and internal user {internal_webex_user_id} is in country, allowing call {call_id}")
-        elif event_type == "xsi:CallOriginatedEvent" and internal_webex_user_id:
-            lm.lnp(f"Internal to External call (outbound) and internal user {internal_webex_user_id} is in country; allowing call {call_id}")
-        
     def handle_event(self, event):
         """
         Handle an event.
@@ -200,7 +195,7 @@ class CallMonitor:
                 xsi_user_id = event_details.get('user_id')  # Fetch the user ID
                 xsi_target_id = event_details.get('target_id')  # Fetch the target ID
 
-                lm.lnp(f"Handling call event. Type: {event_type}, Call ID: {call_id}, Caller: {xsi_user_id}, Call Receiver: {xsi_target_id}")
+                #lm.lnp(f"Handling call event. Type: {event_type}, Call ID: {call_id}, Caller: {xsi_user_id}, Call Receiver: {xsi_target_id}")
                 internal_xsi_user_id = xsi_target_id if xsi_target_id else xsi_user_id  # Fetch the internal user ID
 
                 if xsi_user_id and xsi_target_id:  # Both Internal check

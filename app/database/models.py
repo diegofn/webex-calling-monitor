@@ -51,11 +51,34 @@ class AgentEvent(Base):
     event_id = Column(String, nullable=False, index=True)
     sequence_number = Column(Integer)
     user_id = Column(String, nullable=False, index=True)
-    target_id = Column(String)
+    target_id = Column(String, index=True)
     event_type = Column(String)
     state = Column(String)
-    state_timestamp = Column(BigInteger)
+    state_timestamp = Column(BigInteger, index=True)
     sign_in_timestamp = Column(BigInteger)
     total_available_time = Column(Integer)
     average_wrap_up_time = Column(Integer)
+    created_at = Column(Float, nullable=False)
+
+
+class QueueEvent(Base):
+    """
+    Stores ACD queue call events received from the XSI event channel.
+    """
+    __tablename__ = 'queue_events'
+    id = Column(Integer, primary_key=True, index=True)
+    event_id = Column(String, nullable=False, index=True)
+    sequence_number = Column(Integer)
+    user_id = Column(String, index=True)
+    target_id = Column(String, index=True)
+    event_type = Column(String)
+    call_id = Column(String, index=True)
+    ext_tracking_id = Column(String)
+    caller_name = Column(String)
+    caller_address = Column(String)
+    caller_type = Column(String)
+    add_time = Column(BigInteger, index=True)
+    acd_name = Column(String)
+    acd_number = Column(String)
+    acd_priority = Column(String)
     created_at = Column(Float, nullable=False)

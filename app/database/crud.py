@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.logger.logrr import lm
-from app.database.models import AdminToken, UserList, AgentEvent, WebexUser
+from app.database.models import AdminToken, UserList, AgentEvent, WebexUser, QueueEvent
 
 
 def extract_access_token(token_object):
@@ -263,4 +263,48 @@ class CRUDOperations:
             return self.commit_db(db_item=existing, operation_name='update_webex_user')
 
         return existing
+
+    def create_queue_event(self, event_id: str, sequence_number: int, user_id: str,
+                           target_id: str, event_type: str, call_id: str,
+                           ext_tracking_id: str, caller_name: str, caller_address: str,
+                           caller_type: str, add_time: int, acd_name: str,
+                           acd_number: str, acd_priority: str, created_at: float):
+        """
+        Persists an ACD queue call event received from the XSI channel.
+        """
+        db_item = QueueEvent(
+            event_id=event_id,
+            sequence_number=sequence_number,
+            user_id=user_id,
+            target_id=target_id,
+            event_type=event_type,
+            call_id=call_id,
+            ext_tracking_id=ext_tracking_id,
+            caller_name=caller_name,
+            caller_address=caller_address,
+            caller_type=caller_type,
+            add_time=add_time,
+            acd_name=acd_name,
+            acd_number=acd_number,
+            acd_priority=acd_priority,
+            created_at=created_at,
+        )
+        return self.commit_db(db_item=db_item, operation_name='create_queue_event')
+
+    def get_agent_events(self, date_from=None, date_to=None, user_id=None, limit=500):
+        """
+        Returns (AgentEvent, WebexUser | None) tuples filtered by optional date range
+        (epoch ms) and/or user_id. Joins WebexUser on target_id = xsi_user_id.
+        Results are ordered newest first.
+        """
+        query = self.db.query(AgentEvent, WebexUser).outerjoin(
+            WebexUser, AgentEvent.target_id == WebexUser.xsi_user_id
+        )
+        if date_from is not None:
+            query = query.filter(AgentEvent.state_timestamp >= date_from)
+        if date_to is not None:
+            query = query.filter(AgentEvent.state_timestamp <= date_to)
+        if user_id:
+            query = query.filter(AgentEvent.user_id == user_id)
+        return query.order_by(AgentEvent.state_timestamp.desc()).limit(limit).all()
 

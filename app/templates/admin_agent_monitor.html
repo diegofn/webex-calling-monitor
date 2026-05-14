@@ -1,0 +1,14 @@
+{% extends "layouts/masterPage.html" %}
+{% block content %}
+
+<div class="container" style="padding-top:24px;">
+  <h2 style="margin-bottom:20px; color:var(--wx-ink-700);">Agent Monitor Events</h2>
+  <div id="root"></div>
+</div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" src="/static/js/agent_monitor_react.js"></script>
+
+{% endblock %}

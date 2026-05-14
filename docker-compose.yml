@@ -25,9 +25,9 @@ services:
       db:
         condition: service_healthy
     env_file:
-      - ./app/config/.env          # reads WEBEX_ADMIN_UID, CLIENT_ID, CLIENT_SECRET, PUBLIC_URL
+      - .env                         # create this file on the server (see .env.example)
     environment:
-      # Override DB URL: in Docker the host is 'db' (service name), not localhost
+      # Always override DB URL so the host is 'db' (docker service), not localhost
       SQLALCHEMY_DATABASE_URL: postgresql://wxc-monitor:wxc-monitor@db/wxc-monitor
 
 volumes:

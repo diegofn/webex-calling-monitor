@@ -6,6 +6,7 @@ include/
 pyvenv.cfg
 
 # Secrets - injected at runtime via environment variables
+.env
 app/config/.env
 
 # Python cache

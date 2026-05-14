@@ -15,6 +15,7 @@ services:
       retries: 10
 
   app:
+    container_name: wxc-monitor
     build: .
     # To deploy from DockerHub instead of building locally, replace the line above with:
     image: diegofn/wxc-monitor:latest

@@ -17,7 +17,7 @@ services:
   app:
     build: .
     # To deploy from DockerHub instead of building locally, replace the line above with:
-    # image: yourdockerhubuser/wxc-monitor:latest
+    image: diegofn/wxc-monitor:latest
     restart: unless-stopped
     ports:
       - "8000:8000"

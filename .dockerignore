@@ -1,0 +1,28 @@
+# Host venv - not needed in Docker
+bin/
+lib/
+lib64/
+include/
+pyvenv.cfg
+
+# Secrets - injected at runtime via environment variables
+app/config/.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Git
+.git/
+.gitignore
+
+# Logs
+logs/
+
+# systemd service file
+*.service
+
+# Editor / OS
+.DS_Store
+.idea/
+*.swp

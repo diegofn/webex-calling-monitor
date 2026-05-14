@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wxc-monitor
+      POSTGRES_PASSWORD: wxc-monitor
+      POSTGRES_DB: wxc-monitor
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wxc-monitor"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    # To deploy from DockerHub instead of building locally, replace the line above with:
+    # image: yourdockerhubuser/wxc-monitor:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./app/config/.env          # reads WEBEX_ADMIN_UID, CLIENT_ID, CLIENT_SECRET, PUBLIC_URL
+    environment:
+      # Override DB URL: in Docker the host is 'db' (service name), not localhost
+      SQLALCHEMY_DATABASE_URL: postgresql://wxc-monitor:wxc-monitor@db/wxc-monitor
+
+volumes:
+  pgdata:
